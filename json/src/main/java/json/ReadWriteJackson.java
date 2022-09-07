@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,12 +16,18 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import domain.Book;
 import domain.MessageInfo;
 import domain.Person;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
 import org.json.JSONArray;
+
 
 // tag::main[]
 public class ReadWriteJackson {
 
+    protected static final Logger logger = LogManager.getLogger();
     public static void main(String[] args) throws IOException {
+
         //BasicReadWrite();
         //Test01();
         //TestJsonArray();
@@ -33,6 +40,7 @@ public class ReadWriteJackson {
         //JsonFileToJavaObject();
         //JsonArrayToListOfJavaObjects();
         ConvertJsonToJavaMap();
+        logger.info("Information");
     }
 
     private static void ConvertJsonToJavaMap() {
@@ -45,7 +53,7 @@ public class ReadWriteJackson {
 
             // print map entries
             for (Map.Entry<?, ?> entry : map.entrySet()) {
-                System.out.println(entry.getKey() + "=" + entry.getValue());
+                logger.info(entry.getKey() + "=" + entry.getValue());
             }
 
         } catch (Exception ex) {
