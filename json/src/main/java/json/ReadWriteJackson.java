@@ -2,10 +2,8 @@ package json;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,6 +11,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import domain.Book;
 import domain.MessageInfo;
 import domain.Person;
@@ -22,25 +21,50 @@ import org.apache.logging.log4j.Marker;
 import org.json.JSONArray;
 
 
+
 // tag::main[]
 public class ReadWriteJackson {
-
     protected static final Logger logger = LogManager.getLogger();
     public static void main(String[] args) throws IOException {
 
-        //BasicReadWrite();
-        //Test01();
-        //TestJsonArray();
-        //JsonToString();
-        //JsonToFile();
-        //ObjectsToJsonArray();
-        //UseDefaultPrettyPrinter();
-        //MapToJson();
-        //JsonStringToJson();
-        //JsonFileToJavaObject();
-        //JsonArrayToListOfJavaObjects();
+        BasicReadWrite();
+        UseCreateObjectNode();
+        TestJsonArray();
+        ObjectToJsonString();
+        JsonToFile();
+        ObjectsToJsonArray();
+        UseDefaultPrettyPrinter();
+        MapToJson();
+        JsonStringToJson();
+        JsonFileToJavaObject();
+        JsonArrayToListOfJavaObjects();
         ConvertJsonToJavaMap();
-        logger.info("Information");
+        logger.info("Done");
+
+    }
+
+    private static void ObjectToJsonString() {
+        try {
+            // create book object
+            Book book = new Book("Thinking in Java", "978-0131872486", 1998,
+                    new String[]{"Bruce Eckel", "Bill"});
+
+            ObjectMapper mapper= new ObjectMapper();
+            // convert book object to JSON
+            String json = mapper.writeValueAsString(book);
+
+            // print JSON string
+            logger.debug(json);
+            MessageInfo messageInfo = new MessageInfo();
+            messageInfo.textMessage = "text";
+            messageInfo.phoneNumber = "1234";
+
+            logger.debug(mapper.writeValueAsString(messageInfo));
+
+        } catch (Exception ex) {
+            logger.error(ex);
+
+        }
     }
 
     private static void ConvertJsonToJavaMap() {
@@ -57,7 +81,7 @@ public class ReadWriteJackson {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -70,10 +94,10 @@ public class ReadWriteJackson {
             List<Book> books = Arrays.asList(mapper.readValue(Paths.get("c:/temp/books.json").toFile(), Book[].class));
 
             // print books
-            books.forEach(System.out::println);
+            books.forEach(x->logger.debug(x));
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -86,10 +110,10 @@ public class ReadWriteJackson {
             Book book = mapper.readValue(Paths.get("c:/temp/book.json").toFile(), Book.class);
 
             // print book
-            System.out.println(book);
+            logger.debug(book);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -106,10 +130,10 @@ public class ReadWriteJackson {
             Book book = mapper.readValue(json, Book.class);
 
             // print book
-            System.out.println(book);
+            logger.debug(book);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -126,10 +150,10 @@ public class ReadWriteJackson {
             ObjectMapper mapper = new ObjectMapper();
 
             // convert book map to JSON file
-            mapper.writeValue(System.out, map);
+            logger.debug(mapper.writeValueAsString(map));
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -146,10 +170,10 @@ public class ReadWriteJackson {
             ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
 
             // convert book object to JSON file
-            writer.writeValue(System.out, book);
+            logger.debug(writer.writeValueAsString(book));
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -167,10 +191,10 @@ public class ReadWriteJackson {
             ObjectMapper mapper = new ObjectMapper();
 
             // convert books object to JSON file
-            mapper.writeValue(System.out, books);
+            logger.debug(mapper.writeValueAsString(books));
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -187,26 +211,11 @@ public class ReadWriteJackson {
             mapper.writeValue(Paths.get("c:/temp/book.json").toFile(), book);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
-    private static void JsonToString() {
-        try {
-            // create book object
-            Book book = new Book("Thinking in Java", "978-0131872486", 1998,
-                    new String[]{"Bruce Eckel", "Bill"});
 
-            // convert book object to JSON
-            String json = new ObjectMapper().writeValueAsString(book);
-
-            // print JSON string
-            System.out.println(json);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     private static void TestJsonArray() throws JsonProcessingException {
         JSONArray jsonArray = new JSONArray();
@@ -218,21 +227,17 @@ public class ReadWriteJackson {
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(messageInfo);
         jsonArray.put(json);
-        System.out.println(jsonArray.toString());
+        logger.debug(jsonArray.toString());
     }
 
-    private static void Test01() throws JsonProcessingException {
-        MessageInfo messageInfo = new MessageInfo();
-        messageInfo.textMessage = "text";
-        messageInfo.phoneNumber = "1234";
+    private static void UseCreateObjectNode() {
         ObjectMapper mapper = new ObjectMapper();
-        StringBuilder sb = new StringBuilder();
-
-        String json = mapper.writeValueAsString(messageInfo);
-        System.out.println(">>" + json);
-
-        MessageInfo mi = mapper.readValue(json, MessageInfo.class);
-        System.out.println("<<" + mapper.writeValueAsString(mi));
+        ObjectNode object = mapper.createObjectNode();
+        object.put("textMessage","textMessage");
+        java.util.Date date = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        object.put("dateTime", df.format(date));
+        logger.debug(object);
     }
 
     public static void BasicReadWrite() throws IOException {
@@ -241,11 +246,12 @@ public class ReadWriteJackson {
         String jsonInput =                                       // <2>
                 "{\"id\":0,\"firstName\":\"Robin\",\"lastName\":\"Wilson\"}";
         Person q = mapper.readValue(jsonInput, Person.class);
-        System.out.println("Read and parsed Person from JSON: " + q);
+        logger.debug("Read and parsed Person from JSON: " + q);
 
         Person p = new Person("Roger", "Rabbit");                // <3>
-        System.out.print("Person object " + p + " as JSON = ");
-        mapper.writeValue(System.out, p);
+        logger.debug("Person object " + p + " as JSON = ");
+
+        logger.debug(mapper.writeValueAsString(p));
     }
 }
 // end::main[]
