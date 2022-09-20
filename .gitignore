@@ -7,3 +7,5 @@
 *.iml
 
 logs/
+classes/
+test-classes/
