@@ -10,3 +10,4 @@ logs/
 classes/
 test-classes/
 .vscode/
+.gradle/
