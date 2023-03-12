@@ -1,5 +1,9 @@
 # README
 
+## 2023-03-12
+
+- Add `@Slf4j` support
+
 ## 2022-09-23
 
 * Create this file

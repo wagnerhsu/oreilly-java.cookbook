@@ -18,15 +18,6 @@ public class App {
 
     public static void main(String[] args) {
         LocalDateDemoAndTime();
-        DateTimeFormatterDemo();
-    }
-
-    private static void DateTimeFormatterDemo() {
-        LocalDateTime date = LocalDateTime.now();
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        logger.debug(df.format(date));
-        // By default, toString will use ISO 8601 format like '2022-09-23T16:25:59.455'
-        logger.debug(date.toString());
     }
 
     private static void LocalDateDemoAndTime() {
