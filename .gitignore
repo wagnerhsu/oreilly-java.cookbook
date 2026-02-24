@@ -11,3 +11,5 @@ classes/
 test-classes/
 .vscode/
 .gradle/
+target/
+
